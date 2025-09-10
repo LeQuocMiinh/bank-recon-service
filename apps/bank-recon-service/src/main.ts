@@ -5,6 +5,7 @@ import bankReconRouter from './routers/route';
 import dotenv from "dotenv";
 import { swaggerConfig } from './utils';
 import { portgressDb } from './stores/db';
+import { rateLimit } from './middlewares';
 dotenv.config();
 
 const app = new Hono();
@@ -17,7 +18,7 @@ swaggerConfig(app, "swagger");
     await portgressDb.$connect();
     
     console.log('Database connected');
-    
+    app.use("*", rateLimit);
     app.route("/", bankReconRouter);
     
   } catch (error) {
