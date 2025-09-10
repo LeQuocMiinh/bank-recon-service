@@ -14,8 +14,8 @@ describe("Login", () => {
     });
 
     if (user) {
-      await portgressDb.user.delete({
-        where: { id: user.id },
+     await portgressDb.user.deleteMany({
+        where: { email: "minh@gmail.com" },
       });
     }
   });
@@ -24,8 +24,7 @@ describe("Login", () => {
     const invalidPayload = { email: 'bad-email', password: '123' };
     const res = await request(`http://localhost:${PORT}`)
       .post('/auth/login')
-      .send(invalidPayload)
-      .set('Accept', 'application/json');
+      .send(invalidPayload);
 
     expect(res.body.ok).toBe(false);
   });

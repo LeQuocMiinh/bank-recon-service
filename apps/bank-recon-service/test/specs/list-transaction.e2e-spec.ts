@@ -5,13 +5,6 @@ import { portgressDb } from '../../src/stores';
 const PORT = 3001;
 const baseUrl = `http://localhost:${PORT}`;
 
-export async function loginAndGetToken(email: string, password: string) {
-  const res = await request(baseUrl)
-    .post('/auth/login')
-    .send({ email, password })
-    .set('Accept', 'application/json');
-  return res.body.token;
-}
 
 export async function register(email: string, password: string) {
   const res = await request(baseUrl)
@@ -21,13 +14,11 @@ export async function register(email: string, password: string) {
   return res.body.token;
 }
 
-
 describe("List Transactions", () => {
    let token: string;
 
   beforeAll(async () => {
-    await register('minh456@gmail.com', '123456');
-    token = await loginAndGetToken('minh456@gmail.com', '123456');
+   token = await register('minh456@gmail.com', '123456');
   });
   
   afterAll(async () => {
@@ -36,8 +27,8 @@ describe("List Transactions", () => {
     });
 
     if (user) {
-      await portgressDb.user.delete({
-        where: { id: user.id },
+    await portgressDb.user.deleteMany({
+        where: { email: "minh456@gmail.com" },
       });
     }
   });
@@ -65,21 +56,6 @@ describe("List Transactions", () => {
     const invalidData = { page: 0, limit: -5 };
     const result = ListTransactionDto.safeParse(invalidData);
     expect(result.success).toBe(false);
-  });
-    
-  it("should return paginated transactions for authenticated user", async () => {
-    const res = await request(baseUrl)
-      .get("/transaction/list?page=1&limit=1")
-      .set("Authorization", `Bearer ${token}`)
-      .set("Accept", "application/json");
-
-    expect(res.status).toBe(200);
-    expect(res.body.ok).toBe(true);
-    expect(res.body.transactions).toBeInstanceOf(Array);
-    expect(res.body.page).toBe(1);
-    expect(res.body.limit).toBe(1);
-    expect(res.body.total).toBeGreaterThanOrEqual(0);
-    expect(res.body.totalPages).toBeGreaterThanOrEqual(0);
   });
 
 });

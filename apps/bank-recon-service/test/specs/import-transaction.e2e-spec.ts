@@ -3,7 +3,7 @@ import FormData from 'form-data';
 import { portgressDb } from '../../src/stores/db';
 import { importTransactions } from '../../src/modules/transaction/transaction.controller';
 import { Hono } from 'hono';
-import { loginAndGetToken, register } from './list-transaction.e2e-spec';
+import { register } from './list-transaction.e2e-spec';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -30,8 +30,7 @@ describe('Import Transaction', () => {
     let token: string;
 
   beforeAll(async () => {
-          await register('mistake@gmail.com', '123456');
-        token = await loginAndGetToken('mistake@gmail.com', '123456');
+        token =  await register('mistake@gmail.com', '123456');
   });
   
   afterAll(async () => {
