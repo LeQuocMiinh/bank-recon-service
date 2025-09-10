@@ -133,8 +133,13 @@ pnpm migrate
 ```bash
 pnpm start
 ```
-
 The server should now be running at `http://localhost:3000`.
+
+6. **Run test e2e**
+
+```bash
+pnpm test
+```
 
 ---
 
