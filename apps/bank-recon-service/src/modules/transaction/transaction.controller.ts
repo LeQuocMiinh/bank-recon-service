@@ -14,13 +14,10 @@ export async function importTransactions(c: Context) {
     if (!file) return c.json({ ok:false, error: "No file uploaded" }, 400);
 
     const user = c.get("user") as any;
-    
-    let userIdTransaction = await getCache('userIdTransaction');
-    if (!userIdTransaction || userIdTransaction.length <= 0) {
-      userIdTransaction = user.userId;
-      addCacheExpire("userIdTransaction", userIdTransaction || '');
-    }
 
+    const cacheKey = `userIdTransaction:${user.userId}`;
+    await addCacheExpire(cacheKey, user.userId);
+    
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
@@ -36,8 +33,8 @@ export async function importTransactions(c: Context) {
           content: row.content?.trim(),
           amount: parseAmount(row.amount?.trim()),
           type: row.type?.trim(),
-          userId: Number(userIdTransaction)
-        };
+          userId: Number(await getCache(cacheKey))
+        };c
 
         const parsed = ImportTransactionDto.safeParse(rawRow);
         if (!parsed.success) {

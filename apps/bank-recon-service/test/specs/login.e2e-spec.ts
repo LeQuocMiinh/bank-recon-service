@@ -1,7 +1,24 @@
 import request from 'supertest';
+import { register } from './list-transaction.e2e-spec';
+import { portgressDb } from '../../src/stores';
 
 const PORT = 3001;
 describe("Login", () => {
+  beforeAll(async () => {
+    await register('minh@gmail.com', '123456');
+  });
+
+  afterAll(async () => {
+    const user = await portgressDb.user.findFirst({
+      where: { email: "minh@gmail.com" },
+    });
+
+    if (user) {
+      await portgressDb.user.delete({
+        where: { id: user.id },
+      });
+    }
+  });
 
   it('should fail with invalid DTO', async () => {
     const invalidPayload = { email: 'bad-email', password: '123' };

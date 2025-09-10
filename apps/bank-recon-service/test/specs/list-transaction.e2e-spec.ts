@@ -1,10 +1,11 @@
 import request from 'supertest';
 import { ListTransactionDto } from '../../src/dtos';
+import { portgressDb } from '../../src/stores';
 
 const PORT = 3001;
 const baseUrl = `http://localhost:${PORT}`;
 
-async function loginAndGetToken(email: string, password: string) {
+export async function loginAndGetToken(email: string, password: string) {
   const res = await request(baseUrl)
     .post('/auth/login')
     .send({ email, password })
@@ -12,12 +13,35 @@ async function loginAndGetToken(email: string, password: string) {
   return res.body.token;
 }
 
+export async function register(email: string, password: string) {
+  const res = await request(baseUrl)
+    .post('/auth/register')
+    .send({ email, password })
+    .set('Accept', 'application/json');
+  return res.body.token;
+}
+
+
 describe("List Transactions", () => {
    let token: string;
 
-    beforeAll(async () => {
-        token = await loginAndGetToken('minh@gmail.com', '123456');
+  beforeAll(async () => {
+    await register('minh456@gmail.com', '123456');
+    token = await loginAndGetToken('minh456@gmail.com', '123456');
+  });
+  
+  afterAll(async () => {
+    const user = await portgressDb.user.findFirst({
+      where: { email: "minh456@gmail.com" },
     });
+
+    if (user) {
+      await portgressDb.user.delete({
+        where: { id: user.id },
+      });
+    }
+  });
+
 
   it("should return 401 if user is not authenticated", async () => {
     const res = await request(baseUrl)

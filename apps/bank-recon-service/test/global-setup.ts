@@ -19,8 +19,11 @@ export default async function globalSetup() {
     port: PORT,
   });
 
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  
   (globalThis as any).TEST_SERVER = server;
   (globalThis as any).TEST_PORT = PORT;
+
 
   console.log(`🚀 Test server running at http://localhost:${PORT}`);
 }
