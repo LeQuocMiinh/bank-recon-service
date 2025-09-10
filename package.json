@@ -1,0 +1,16 @@
+{
+  "name": "hono-mono-repo",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "common": "pnpm --filter @packages/common",
+    "bank-recon-service": "pnpm --filter @apps/bank-recon-service",
+    "bank-recon-service:dev": "pnpm run bank-recon-service dev",
+    "packages:build": "pnpm run common build",
+    "migrate":"pnpm run bank-recon-service prisma:gen && pnpm run bank-recon-service prisma:dev",
+    "start":"pnpm install && pnpm run packages:build && pnpm run bank-recon-service:dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
