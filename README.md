@@ -27,10 +27,11 @@ Design patterns used:
 |                        | - CSV/XLS Parser                |                        |
 |                        | - Batch Processing              |                        |
 |                        | - API Endpoints:                |                        |
-|                        |    - /register                  |                        |
-|                        |    - /login                     |                        |
-|                        |    - /import-transactions       |                        |
-|                        |    - /list-transactions         |                        |
+|                        |    - /auth/register             |                        |
+|                        |    - /auth/login                |                        |
+|                        |    - /transaction/import        |                        |
+|                        |    - /transaction/list          |                        |
+|                        |    - /transaction/detail        |                        |
 |                        | - Redis (Upstash)               |                        |
 |                        |    - Store session tokens       |                        |
 |                        |    - Token expiration           |                        |
@@ -167,7 +168,7 @@ curl --location 'http://localhost:3000/auth/login' \
 }'
 ```
 
-### POST /transactions/import (Upload CSV)
+### POST /transaction/import (Upload CSV)
 
 ```bash
 curl --location 'http://localhost:3000/transaction/import' \
@@ -175,11 +176,18 @@ curl --location 'http://localhost:3000/transaction/import' \
 --form 'file=@"/home/mistake/Desktop/data - Trang tính1.csv"'
 ```
 
-### GET /transactions/list
+### GET /transaction/list
 
 ```bash
 curl --location 'http://localhost:3000/transaction/list?limit=1&page=1' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoibWluaEBnbWFpbC5jb20iLCJpYXQiOjE3NTc1MDg0MjAsImV4cCI6MTc1NzUxMjAyMH0.629hlX3MVQcetqjZ-DJqkqiXb9k0IBLoox_pc2kbSo0'
+```
+
+### GET /transaction/detail
+
+```bash
+curl --location 'http://localhost:3000/transaction/detail?id=0' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjg1LCJlbWFpbCI6Im1pbmhAZ21haWwuY29tIiwiaWF0IjoxNzU3NTkzMDg4LCJleHAiOjE3NTc1OTY2ODh9.KVUuK0Up8zjmWsDouHCKR-vvc_jNCXN1LgQ-e0lh-0s'
 ```
 
 ## 5. API Documentation (Swagger / OpenAPI)
